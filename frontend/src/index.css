@@ -1,7 +1,67 @@
 @import "tailwindcss";
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f8fafc;
+@layer base {
+  :root {
+    --color-primary-cyan: #00DCE5;
+    --color-main-white: #FFFFFF;
+    --color-dark-slate: #1E293B;
+    --color-light-cyan: #E6FBFC;
+    --color-soft-gray: #F8FAFC;
+    --color-border-gray: #E2E8F0;
+    --color-secondary-text: #64748B;
+  }
+
+  html {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #1E293B;
+    background-color: #FFFFFF;
+  }
+
+  body {
+    min-width: 320px;
+    min-height: 100vh;
+    margin: 0;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  .font-mono-tabular {
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

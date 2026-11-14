@@ -1,10 +1,9 @@
 const express = require("express");
 const db = require("../config/db");
+const { authenticate, requireAdmin } = require("../middleware/auth");
 const router = express.Router();
 
-// Demonstration endpoint only.
-// Add administrator authentication before production use.
-router.get("/admin", async (req, res) => {
+router.get("/admin", authenticate, requireAdmin, async (req, res) => {
   try {
     const [orders] = await db.execute(`
       SELECT o.id, u.full_name AS customer_name, o.created_at,
