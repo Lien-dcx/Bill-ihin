@@ -29,6 +29,25 @@
       #F5F7F3;
   }
 
+  .parallax-grid-background {
+    position: fixed;
+    inset: -5vh -2vw;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(ellipse at 12% 18%, rgba(20, 184, 166, 0.12), transparent 38rem),
+      radial-gradient(ellipse at 88% 82%, rgba(15, 118, 110, 0.08), transparent 34rem),
+      linear-gradient(rgba(36, 53, 47, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(36, 53, 47, 0.035) 1px, transparent 1px);
+    background-size: auto, auto, 40px 40px, 40px 40px;
+    will-change: transform;
+  }
+
+  .auth-brand-panel {
+    background: linear-gradient(145deg, rgba(36, 53, 47, 0.97), rgba(31, 72, 61, 0.94));
+    backdrop-filter: blur(8px);
+  }
+
   button,
   input,
   select,

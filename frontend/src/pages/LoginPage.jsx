@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { ArrowRight, Droplets, Eye, EyeOff, Wifi, Zap } from 'lucide-react';
+import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useApp } from '../context/useApp';
-import { BillihinLogo } from '../components/layout/Sidebar';
+import AuthBrandPanel from '../components/auth/AuthBrandPanel';
 import FormInput from '../components/ui/FormInput';
+import ParallaxGridBackground from '../components/ui/ParallaxGridBackground';
 
 export default function LoginPage() {
   const { loginWithEmail, navigateTo } = useApp();
@@ -30,33 +31,13 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#F5F7F3] p-4 sm:p-8">
-      <div className="grid w-full max-w-5xl overflow-hidden rounded-3xl border border-[#DDE5DE] bg-white shadow-sm md:grid-cols-2">
-        <section className="flex flex-col justify-between gap-10 bg-[#24352F] p-7 text-white sm:p-10">
-          <BillihinLogo />
-          <div>
-            <h1 className="text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">
-              Home bills, made simple.
-            </h1>
-            <p className="mt-4 max-w-md text-lg leading-relaxed text-[#D3E2D9]">
-              See household bills, due dates, and contributions in one clear place.
-            </p>
-          </div>
-          <div className="grid grid-cols-3 gap-2" aria-label="Household utilities">
-            <div className="flex min-h-16 flex-col items-center justify-center gap-1 rounded-xl bg-white/10 px-2 py-2">
-              <Zap className="h-5 w-5 shrink-0 text-amber-300" aria-hidden="true" />
-              <span className="text-sm font-semibold">Power</span>
-            </div>
-            <div className="flex min-h-16 flex-col items-center justify-center gap-1 rounded-xl bg-white/10 px-2 py-2">
-              <Droplets className="h-5 w-5 shrink-0 text-sky-300" aria-hidden="true" />
-              <span className="text-sm font-semibold">Water</span>
-            </div>
-            <div className="flex min-h-16 flex-col items-center justify-center gap-1 rounded-xl bg-white/10 px-2 py-2">
-              <Wifi className="h-5 w-5 shrink-0 text-violet-300" aria-hidden="true" />
-              <span className="text-sm font-semibold">Internet</span>
-            </div>
-          </div>
-        </section>
+    <main className="relative isolate flex min-h-screen items-center justify-center bg-[#F5F7F3] p-4 sm:p-8">
+      <ParallaxGridBackground />
+      <div className="relative z-10 grid w-full max-w-5xl overflow-hidden rounded-3xl border border-[#DDE5DE] bg-white/90 shadow-lg backdrop-blur-md md:grid-cols-2">
+        <AuthBrandPanel
+          title="Home bills, made simple."
+          description="See household bills, due dates, and contributions in one clear place."
+        />
 
         <section className="flex items-center justify-center p-6 sm:p-10">
           <div className="w-full max-w-md space-y-7">

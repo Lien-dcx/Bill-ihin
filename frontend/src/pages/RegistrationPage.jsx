@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { ArrowLeft, CheckCircle2 } from 'lucide-react';
-import { useApp } from '../context/useApp';
-import { BillihinLogo } from '../components/layout/Sidebar';
+import AuthBrandPanel from '../components/auth/AuthBrandPanel';
 import FormInput from '../components/ui/FormInput';
+import ParallaxGridBackground from '../components/ui/ParallaxGridBackground';
+import { useApp } from '../context/useApp';
 
 export default function RegistrationPage() {
   const { registerAccount, navigateTo } = useApp();
@@ -20,22 +20,22 @@ export default function RegistrationPage() {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     const next = {};
-    if (!form.fullName.trim()) next.fullName = 'Full name is required.';
-    if (!form.email.trim() || !form.email.includes('@')) next.email = 'Valid email is required.';
+    if (!form.fullName.trim()) next.fullName = 'Enter your name.';
+    if (!form.email.trim() || !form.email.includes('@')) next.email = 'Enter a valid email address.';
     if (!form.password || form.password.length < 8) {
-      next.password = 'Password must be at least 8 characters.';
+      next.password = 'Use at least 8 characters.';
     }
     if (form.password !== form.confirmPassword) {
       next.confirmPassword = 'Passwords do not match.';
     }
     if (form.mode === 'create' && !form.householdName.trim()) {
-      next.householdName = 'Enter a name for your household.';
+      next.householdName = 'Enter a household name.';
     }
     if (form.mode === 'join' && !form.inviteCode.trim()) {
-      next.inviteCode = 'Enter the household invite code.';
+      next.inviteCode = 'Enter the invite code.';
     }
     setErrors(next);
     if (Object.keys(next).length > 0) return;
@@ -53,177 +53,150 @@ export default function RegistrationPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col lg:flex-row">
-      {/* Left Info Panel */}
-      <div className="lg:w-[42%] bg-[#1E293B] text-white p-8 sm:p-12 flex flex-col justify-between gap-8">
-        <div>
-          <BillihinLogo />
-          <h1 className="mt-10 text-3xl font-extrabold tracking-tight text-balance">
-            Set up your shared household finance hub in minutes.
-          </h1>
-          <p className="mt-3 text-sm text-slate-300 leading-relaxed">
-            Whether you are creating a new household workspace as an Administrator or joining an existing home as a Member, Bill-ihin keeps budgets, contributions, and bill settlements organized.
-          </p>
-        </div>
+    <main className="relative isolate flex min-h-screen items-center justify-center bg-[#F5F7F3] p-4 sm:p-8">
+      <ParallaxGridBackground />
+      <div className="relative z-10 grid w-full max-w-6xl overflow-hidden rounded-3xl border border-[#DDE5DE] bg-white/90 shadow-lg backdrop-blur-md md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+        <AuthBrandPanel
+          title="A simpler way to manage home bills."
+          description="Create a household or join yours to keep shared bills and due dates together."
+        />
 
-        <div className="space-y-3 text-sm text-slate-200">
-          <div className="flex items-center gap-2.5">
-            <CheckCircle2 className="w-4 h-4 text-[#00DCE5] shrink-0" />
-            <span>Flexible contributions with optional target shares</span>
-          </div>
-          <div className="flex items-center gap-2.5">
-            <CheckCircle2 className="w-4 h-4 text-[#00DCE5] shrink-0" />
-            <span>Clear separation between member funding and provider payments</span>
-          </div>
-          <div className="flex items-center gap-2.5">
-            <CheckCircle2 className="w-4 h-4 text-[#00DCE5] shrink-0" />
-            <span>Philippine Peso (₱) budget allocation and overdue alerts</span>
-          </div>
-        </div>
+        <section className="flex items-center justify-center p-6 sm:p-10">
+          <div className="w-full max-w-xl space-y-6">
+            <div>
+              <h2 className="text-2xl font-extrabold tracking-tight text-[#24352F] sm:text-3xl">
+                Create your account
+              </h2>
+              <p className="mt-2 text-base text-[#68776D]">
+                Choose how you want to get started.
+              </p>
+            </div>
 
-        <button
-          type="button"
-          onClick={() => navigateTo('login')}
-          className="inline-flex items-center gap-2 text-xs font-semibold text-[#00DCE5] hover:underline w-fit"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to Sign In
-        </button>
-      </div>
+            <div className="grid grid-cols-2 gap-2 rounded-2xl border border-[#DDE5DE] bg-[#F5F8F5] p-1.5">
+              <button
+                type="button"
+                onClick={() => setForm((current) => ({
+                  ...current,
+                  mode: 'create',
+                  relationship: 'Household Head',
+                }))}
+                aria-pressed={form.mode === 'create'}
+                className={`min-h-12 rounded-xl px-3 py-2 text-base font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#14B8A6] ${
+                  form.mode === 'create'
+                    ? 'bg-[#137C69] text-white shadow-sm'
+                    : 'text-[#526258] hover:bg-white'
+                }`}
+              >
+                Create household
+              </button>
+              <button
+                type="button"
+                onClick={() => setForm((current) => ({
+                  ...current,
+                  mode: 'join',
+                  relationship: 'Household Member',
+                }))}
+                aria-pressed={form.mode === 'join'}
+                className={`min-h-12 rounded-xl px-3 py-2 text-base font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#14B8A6] ${
+                  form.mode === 'join'
+                    ? 'bg-[#137C69] text-white shadow-sm'
+                    : 'text-[#526258] hover:bg-white'
+                }`}
+              >
+                Join household
+              </button>
+            </div>
 
-      {/* Right Registration Form */}
-      <div className="flex-1 flex items-center justify-center p-6 sm:p-10">
-        <div className="w-full max-w-lg bg-white border border-[#E2E8F0] rounded-2xl p-6 sm:p-8 shadow-sm space-y-6">
-          <div>
-            <h2 className="text-2xl font-bold text-[#1E293B]">Create Account</h2>
-            <p className="mt-1 text-sm text-[#64748B]">
-              Register as a household administrator or join an existing household.
-            </p>
-          </div>
-
-          {/* Mode Toggle */}
-          <div className="grid grid-cols-2 gap-2 p-1 bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg">
-            <button
-              type="button"
-              onClick={() => setForm((f) => ({ ...f, mode: 'create', relationship: 'Household Head' }))}
-              className={`py-2 px-3 rounded-md text-xs font-semibold transition-colors ${
-                form.mode === 'create'
-                  ? 'bg-[#00DCE5] text-[#1E293B]'
-                  : 'text-[#64748B] hover:text-[#1E293B]'
-              }`}
-            >
-              Create New Household (Admin)
-            </button>
-            <button
-              type="button"
-              onClick={() => setForm((f) => ({ ...f, mode: 'join', relationship: 'Household Member' }))}
-              className={`py-2 px-3 rounded-md text-xs font-semibold transition-colors ${
-                form.mode === 'join'
-                  ? 'bg-[#00DCE5] text-[#1E293B]'
-                  : 'text-[#64748B] hover:text-[#1E293B]'
-              }`}
-            >
-              Join Existing Household
-            </button>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <FormInput
-                label="Full Name"
+                label="Your name"
                 name="reg-name"
                 required
                 value={form.fullName}
-                onChange={(e) => setForm((f) => ({ ...f, fullName: e.target.value }))}
-                placeholder="Juan Dela Cruz"
+                onChange={(event) => setForm((current) => ({ ...current, fullName: event.target.value }))}
+                placeholder="Full name"
                 error={errors.fullName}
               />
               <FormInput
-                label="Relationship / Role Label"
-                name="reg-rel"
-                value={form.relationship}
-                onChange={(e) => setForm((f) => ({ ...f, relationship: e.target.value }))}
-                placeholder="e.g., Father, Sibling"
-              />
-            </div>
-
-            <FormInput
-              label="Email Address"
-              name="reg-email"
-              type="email"
-              required
-              value={form.email}
-              onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-              placeholder="juan@household.ph"
-              error={errors.email}
-            />
-
-            {form.mode === 'create' ? (
-              <FormInput
-                label="Household Name"
-                name="reg-household"
+                label="Email address"
+                name="reg-email"
+                type="email"
                 required
-                value={form.householdName}
-                onChange={(e) => setForm((f) => ({ ...f, householdName: e.target.value }))}
-                placeholder="e.g., Santos-Reyes Residence"
-                error={errors.householdName}
+                value={form.email}
+                onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))}
+                placeholder="you@example.com"
+                error={errors.email}
               />
-            ) : (
-              <FormInput
-                label="Household Invite Code"
-                name="reg-invite"
-                required
-                value={form.inviteCode}
-                onChange={(e) => setForm((f) => ({ ...f, inviteCode: e.target.value }))}
-                placeholder="e.g., BH-A1B2C3D4E5-2026"
-                error={errors.inviteCode}
-              />
-            )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {form.mode === 'create' ? (
+                <FormInput
+                  label="Household name"
+                  name="reg-household"
+                  required
+                  value={form.householdName}
+                  onChange={(event) => setForm((current) => ({ ...current, householdName: event.target.value }))}
+                  placeholder="For example, the Santos home"
+                  error={errors.householdName}
+                />
+              ) : (
+                <FormInput
+                  label="Household invite code"
+                  name="reg-invite"
+                  required
+                  value={form.inviteCode}
+                  onChange={(event) => setForm((current) => ({ ...current, inviteCode: event.target.value }))}
+                  placeholder="Enter the code from your household"
+                  error={errors.inviteCode}
+                />
+              )}
+
               <FormInput
                 label="Password"
                 name="reg-pass"
                 type="password"
                 required
                 value={form.password}
-                onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-                placeholder="Min. 8 characters"
+                onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))}
+                placeholder="At least 8 characters"
                 error={errors.password}
               />
               <FormInput
-                label="Confirm Password"
+                label="Confirm password"
                 name="reg-confirm"
                 type="password"
                 required
                 value={form.confirmPassword}
-                onChange={(e) => setForm((f) => ({ ...f, confirmPassword: e.target.value }))}
-                placeholder="Re-enter password"
+                onChange={(event) => setForm((current) => ({ ...current, confirmPassword: event.target.value }))}
+                placeholder="Enter your password again"
                 error={errors.confirmPassword}
               />
-            </div>
 
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full h-11 rounded-lg bg-[#00DCE5] hover:bg-[#00c4cc] text-[#1E293B] text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00DCE5] disabled:opacity-60"
-            >
-              {isSubmitting ? 'Creating account…' : form.mode === 'create' ? 'Create Household & Continue' : 'Join Household & Continue'}
-            </button>
-          </form>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="min-h-13 w-full rounded-xl bg-[#137C69] px-5 py-3 text-base font-bold text-white transition-colors hover:bg-[#0F6658] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#137C69] focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60"
+              >
+                {isSubmitting
+                  ? 'Please wait…'
+                  : form.mode === 'create'
+                    ? 'Create account'
+                    : 'Join household'}
+              </button>
+            </form>
 
-          <p className="text-center text-xs text-[#64748B]">
-            Already have an account?{' '}
-            <button
-              type="button"
-              onClick={() => navigateTo('login')}
-              className="font-bold text-[#0E7490] hover:underline"
-            >
-              Sign in here
-            </button>
-          </p>
-        </div>
+            <p className="text-base text-[#526258]">
+              Already have an account?{' '}
+              <button
+                type="button"
+                onClick={() => navigateTo('login')}
+                className="font-bold text-[#0F766E] underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#14B8A6]"
+              >
+                Sign in
+              </button>
+            </p>
+          </div>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }

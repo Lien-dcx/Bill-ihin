@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Sidebar from './Sidebar';
 import Topbar from './Topbar';
+import ParallaxGridBackground from '../ui/ParallaxGridBackground';
 
 export default function DashboardLayout({ pageTitle, children }) {
   const [navigationOpen, setNavigationOpen] = useState(false);
@@ -39,12 +40,13 @@ export default function DashboardLayout({ pageTitle, children }) {
 
   return (
     <div className="dashboard-shell min-h-screen flex text-[#1E293B]">
+      <ParallaxGridBackground />
       {navigationRendered && (
         <Sidebar open={navigationOpen} onClose={closeNavigation} />
       )}
 
       <div
-        className="flex-1 flex flex-col min-w-0"
+        className="relative z-10 flex min-w-0 flex-1 flex-col"
         aria-hidden={navigationOpen}
         inert={navigationOpen}
       >
