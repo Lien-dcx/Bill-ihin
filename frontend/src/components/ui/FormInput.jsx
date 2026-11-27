@@ -18,7 +18,7 @@ export default function FormInput({
   className = '',
 }) {
   const inputId = `field-${name}`;
-  const baseClass = `w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm text-[#1E293B] placeholder:text-slate-400 transition-colors focus:outline-none focus:ring-2 ${
+  const baseClass = `w-full min-h-12 rounded-lg border bg-white px-4 py-3 text-base text-[#1E293B] placeholder:text-slate-500 transition-colors focus:outline-none focus:ring-2 ${
     error
       ? 'border-red-400 focus:border-red-500 focus:ring-red-200'
       : 'border-[#E2E8F0] focus:border-[#00DCE5] focus:ring-[#00DCE5]/20'
@@ -29,7 +29,7 @@ export default function FormInput({
       {label && (
         <label
           htmlFor={inputId}
-          className="block text-xs font-semibold text-[#1E293B]"
+          className="block text-sm font-semibold text-[#24352F]"
         >
           {label}
           {required && <span className="text-red-600 ml-0.5">*</span>}
@@ -82,11 +82,11 @@ export default function FormInput({
       )}
 
       {error && (
-        <p className="text-xs text-red-600 font-medium" role="alert">
+        <p className="text-sm text-red-700 font-semibold" role="alert">
           {error}
         </p>
       )}
-      {!error && hint && <p className="text-xs text-[#64748B]">{hint}</p>}
+      {!error && hint && <p className="text-sm text-[#64748B]">{hint}</p>}
     </div>
   );
 }

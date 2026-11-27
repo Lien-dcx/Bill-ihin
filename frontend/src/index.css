@@ -2,25 +2,31 @@
 
 @layer base {
   :root {
-    --color-primary-cyan: #00DCE5;
+    --color-primary-cyan: #14B8A6;
     --color-main-white: #FFFFFF;
-    --color-dark-slate: #1E293B;
-    --color-light-cyan: #E6FBFC;
-    --color-soft-gray: #F8FAFC;
-    --color-border-gray: #E2E8F0;
-    --color-secondary-text: #64748B;
+    --color-dark-slate: #24352F;
+    --color-light-cyan: #E7F5F0;
+    --color-soft-gray: #F5F7F3;
+    --color-border-gray: #E3E9E2;
+    --color-secondary-text: #6C7A72;
   }
 
   html {
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-    color: #1E293B;
-    background-color: #FFFFFF;
+    color: #24352F;
+    background-color: #F5F7F3;
   }
 
   body {
     min-width: 320px;
     min-height: 100vh;
     margin: 0;
+  }
+
+  .dashboard-shell {
+    background:
+      radial-gradient(ellipse at 90% 0%, rgba(20, 184, 166, 0.06), transparent 34rem),
+      #F5F7F3;
   }
 
   button,

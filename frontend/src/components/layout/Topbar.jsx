@@ -1,8 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import {
   Menu,
-  PanelLeftClose,
-  PanelLeftOpen,
   ChevronDown,
   UserCircle,
   Settings,
@@ -13,9 +11,8 @@ import NotificationDropdown from '../ui/NotificationDropdown';
 
 export default function Topbar({
   pageTitle,
-  collapsed,
-  onToggleCollapse,
-  onOpenMobile,
+  onOpenNavigation,
+  navigationOpen,
 }) {
   const {
     household,
@@ -39,36 +36,26 @@ export default function Topbar({
   }, []);
 
   return (
-    <header className="h-16 bg-white border-b border-[#E2E8F0] px-4 lg:px-6 flex items-center justify-between gap-4 shrink-0 sticky top-0 z-30">
+    <header className="sticky top-0 z-30 flex h-[76px] shrink-0 items-center justify-between gap-4 border-b border-[#DDE5DE] bg-[#F8FAF6]/95 px-4 backdrop-blur sm:px-6">
       {/* Left: Sidebar Toggle & Page Title + Household Name */}
       <div className="flex items-center gap-3 min-w-0">
         <button
+          id="open-navigation"
           type="button"
-          onClick={onOpenMobile}
+          onClick={onOpenNavigation}
           aria-label="Open navigation menu"
-          className="lg:hidden w-10 h-10 rounded-lg border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] flex items-center justify-center text-[#1E293B] shrink-0"
+          aria-controls="main-navigation"
+          aria-expanded={navigationOpen}
+          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[#DDE5DE] bg-white text-[#24352F] transition-colors hover:bg-[#EAF4EE] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#14B8A6]"
         >
-          <Menu className="w-5 h-5" />
-        </button>
-
-        <button
-          type="button"
-          onClick={onToggleCollapse}
-          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          className="hidden lg:flex w-9 h-9 rounded-lg border border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] items-center justify-center text-[#64748B] hover:text-[#1E293B] shrink-0 transition-colors"
-        >
-          {collapsed ? (
-            <PanelLeftOpen className="w-4 h-4" />
-          ) : (
-            <PanelLeftClose className="w-4 h-4" />
-          )}
+          <Menu className="h-6 w-6" aria-hidden="true" />
         </button>
 
         <div className="min-w-0">
-          <h1 className="text-base sm:text-lg font-bold text-[#1E293B] truncate">
+          <h1 className="truncate text-lg font-bold text-[#24352F] sm:text-xl">
             {pageTitle}
           </h1>
-          <p className="text-xs text-[#64748B] truncate">
+          <p className="truncate text-sm text-[#68776D]">
             {household.name}
           </p>
         </div>

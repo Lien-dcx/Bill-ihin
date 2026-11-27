@@ -204,9 +204,17 @@ export function AppProvider({ children }) {
   const registerAccount = useCallback(async (account) => {
     try {
       const response = await api.post("/auth/register", account);
+      try {
+        await loadData();
+      } catch (error) {
+        currentUserIdRef.current = response.data.user.id;
+        setCurrentUser(response.data.user);
+        navigate("/dashboard", { replace: true });
+        addToast(`Your account was created, but household data could not be loaded: ${errorMessage(error)}`, "warning");
+        return true;
+      }
       currentUserIdRef.current = response.data.user.id;
       setCurrentUser(response.data.user);
-      await loadData();
       navigate("/dashboard", { replace: true });
       addToast(`Welcome to Bill-ihin, ${response.data.user.name}.`, "success");
       return true;

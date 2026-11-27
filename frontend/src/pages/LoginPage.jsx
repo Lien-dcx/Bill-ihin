@@ -1,20 +1,19 @@
 import { useState } from 'react';
-import { ShieldCheck, HandCoins, CreditCard, ArrowRight, Eye, EyeOff } from 'lucide-react';
+import { ArrowRight, Droplets, Eye, EyeOff, Wifi, Zap } from 'lucide-react';
 import { useApp } from '../context/useApp';
 import { BillihinLogo } from '../components/layout/Sidebar';
 import FormInput from '../components/ui/FormInput';
 
 export default function LoginPage() {
   const { loginWithEmail, navigateTo } = useApp();
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     const next = {};
     if (!email.trim() || !email.includes('@')) {
       next.email = 'Enter a valid email address.';
@@ -24,149 +23,126 @@ export default function LoginPage() {
     }
     setErrors(next);
     if (Object.keys(next).length > 0) return;
+
     setIsSubmitting(true);
     await loginWithEmail({ email, password });
     setIsSubmitting(false);
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col lg:flex-row">
-      {/* Left Brand & Value Column */}
-      <div className="lg:w-[46%] bg-[#1E293B] text-white p-8 sm:p-12 lg:p-14 flex flex-col justify-between gap-10">
-        <div>
+    <main className="flex min-h-screen items-center justify-center bg-[#F5F7F3] p-4 sm:p-8">
+      <div className="grid w-full max-w-5xl overflow-hidden rounded-3xl border border-[#DDE5DE] bg-white shadow-sm md:grid-cols-2">
+        <section className="flex flex-col justify-between gap-10 bg-[#24352F] p-7 text-white sm:p-10">
           <BillihinLogo />
-          <h1 className="mt-10 text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight text-balance">
-            Household budgeting built for real families, not forced 50/50 splits.
-          </h1>
-          <p className="mt-4 text-sm sm:text-base text-slate-300 leading-relaxed max-w-lg">
-            Plan monthly household budgets, accept flexible member contributions, verify transfers before settling bills, and track actual payments to utility providers.
-          </p>
-        </div>
-
-        <div className="space-y-4">
-          <div className="flex items-start gap-3.5 p-4 rounded-xl bg-slate-800/70 border border-slate-700/80">
-            <HandCoins className="w-5 h-5 text-[#00DCE5] shrink-0 mt-0.5" />
-            <div>
-              <h2 className="text-sm font-bold text-white">Flexible Member Contributions</h2>
-              <p className="text-xs text-slate-300 mt-0.5">
-                Members contribute custom or partial amounts toward shared bills based on capacity.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3.5 p-4 rounded-xl bg-slate-800/70 border border-slate-700/80">
-            <ShieldCheck className="w-5 h-5 text-[#00DCE5] shrink-0 mt-0.5" />
-            <div>
-              <h2 className="text-sm font-bold text-white">Admin Verification Workflow</h2>
-              <p className="text-xs text-slate-300 mt-0.5">
-                Review proof notes, confirm valid transfers, or reject entries with clear reasons.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3.5 p-4 rounded-xl bg-slate-800/70 border border-slate-700/80">
-            <CreditCard className="w-5 h-5 text-[#00DCE5] shrink-0 mt-0.5" />
-            <div>
-              <h2 className="text-sm font-bold text-white">Separate Contribution &amp; Provider Payment</h2>
-              <p className="text-xs text-slate-300 mt-0.5">
-                Never confuse member deposits with actual payments sent to Meralco, Maynilad, or banks.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <p className="text-xs text-slate-400">
-          Household finances, organized transparently.
-        </p>
-      </div>
-
-      {/* Right Sign-In Card */}
-      <div className="flex-1 flex items-center justify-center p-6 sm:p-10">
-        <div className="w-full max-w-md bg-white border border-[#E2E8F0] rounded-2xl p-6 sm:p-8 shadow-sm space-y-6">
           <div>
-            <h2 className="text-2xl font-bold text-[#1E293B] tracking-tight">
-              Sign in to Bill-ihin
-            </h2>
-            <p className="mt-1 text-sm text-[#64748B]">
-              Access your household budget, bill assignments, and verification queue.
+            <h1 className="text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">
+              Home bills, made simple.
+            </h1>
+            <p className="mt-4 max-w-md text-lg leading-relaxed text-[#D3E2D9]">
+              See household bills, due dates, and contributions in one clear place.
             </p>
           </div>
+          <div className="grid grid-cols-3 gap-2" aria-label="Household utilities">
+            <div className="flex min-h-16 flex-col items-center justify-center gap-1 rounded-xl bg-white/10 px-2 py-2">
+              <Zap className="h-5 w-5 shrink-0 text-amber-300" aria-hidden="true" />
+              <span className="text-sm font-semibold">Power</span>
+            </div>
+            <div className="flex min-h-16 flex-col items-center justify-center gap-1 rounded-xl bg-white/10 px-2 py-2">
+              <Droplets className="h-5 w-5 shrink-0 text-sky-300" aria-hidden="true" />
+              <span className="text-sm font-semibold">Water</span>
+            </div>
+            <div className="flex min-h-16 flex-col items-center justify-center gap-1 rounded-xl bg-white/10 px-2 py-2">
+              <Wifi className="h-5 w-5 shrink-0 text-violet-300" aria-hidden="true" />
+              <span className="text-sm font-semibold">Internet</span>
+            </div>
+          </div>
+        </section>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <FormInput
-              label="Email Address"
-              name="login-email"
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@household.ph"
-              error={errors.email}
-            />
-
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <label htmlFor="login-password" className="block text-xs font-semibold text-[#1E293B]">
-                  Password <span className="text-red-600">*</span>
-                </label>
-              </div>
-              <div className="relative">
-                <input
-                  id="login-password"
-                  name="login-password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className={`w-full rounded-lg border bg-white px-3.5 py-2.5 pr-10 text-sm text-[#1E293B] focus:outline-none focus:ring-2 ${
-                    errors.password
-                      ? 'border-red-400 focus:border-red-500 focus:ring-red-200'
-                      : 'border-[#E2E8F0] focus:border-[#00DCE5] focus:ring-[#00DCE5]/20'
-                  }`}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((s) => !s)}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748B] hover:text-[#1E293B]"
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-              {errors.password && (
-                <p className="text-xs text-red-600 font-medium">{errors.password}</p>
-              )}
+        <section className="flex items-center justify-center p-6 sm:p-10">
+          <div className="w-full max-w-md space-y-7">
+            <div>
+              <h2 className="text-2xl font-extrabold tracking-tight text-[#24352F] sm:text-3xl">
+                Welcome back
+              </h2>
+              <p className="mt-2 text-base text-[#68776D]">
+                Sign in to view your household.
+              </p>
             </div>
 
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full h-11 rounded-lg bg-[#00DCE5] hover:bg-[#00c4cc] text-[#1E293B] text-sm font-bold flex items-center justify-center gap-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00DCE5] disabled:opacity-60"
-            >
-              <span>{isSubmitting ? 'Signing in…' : 'Sign In'}</span>
-              {!isSubmitting && <ArrowRight className="w-4 h-4" />}
-            </button>
-          </form>
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <FormInput
+                label="Email address"
+                name="login-email"
+                type="email"
+                required
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="you@example.com"
+                error={errors.email}
+              />
 
-          {/* Account access is based on the verified household role. */}
-          <div className="pt-4 border-t border-[#E2E8F0] space-y-2.5">
-            <p className="text-xs text-[#64748B] leading-relaxed">
-              Your access is based on your household role. Create a household or join one with an invite code if you are new.
+              <div className="space-y-2">
+                <label htmlFor="login-password" className="block text-sm font-semibold text-[#24352F]">
+                  Password <span className="text-red-700">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    id="login-password"
+                    name="login-password"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="current-password"
+                    required
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    aria-invalid={Boolean(errors.password)}
+                    aria-describedby={errors.password ? 'login-password-error' : undefined}
+                    className={`min-h-12 w-full rounded-xl border bg-white px-4 py-3 pr-14 text-base text-[#24352F] focus:outline-none focus:ring-2 ${
+                      errors.password
+                        ? 'border-red-500 focus:border-red-600 focus:ring-red-200'
+                        : 'border-[#C9D4CC] focus:border-[#137C69] focus:ring-[#137C69]/20'
+                    }`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((visible) => !visible)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    className="absolute right-1 top-1 flex h-10 w-11 items-center justify-center rounded-lg text-[#526258] hover:bg-[#F0F5F1] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#14B8A6]"
+                  >
+                    {showPassword
+                      ? <EyeOff className="h-5 w-5" aria-hidden="true" />
+                      : <Eye className="h-5 w-5" aria-hidden="true" />}
+                  </button>
+                </div>
+                {errors.password && (
+                  <p id="login-password-error" className="text-sm font-semibold text-red-700" role="alert">
+                    {errors.password}
+                  </p>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="flex min-h-13 w-full items-center justify-center gap-2 rounded-xl bg-[#137C69] px-5 py-3 text-base font-bold text-white transition-colors hover:bg-[#0F6658] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#137C69] focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60"
+              >
+                {isSubmitting ? 'Signing in…' : 'Sign in'}
+                {!isSubmitting && <ArrowRight className="h-5 w-5" aria-hidden="true" />}
+              </button>
+            </form>
+
+            <p className="text-base text-[#526258]">
+              New to Bill-ihin?{' '}
+              <button
+                type="button"
+                onClick={() => navigateTo('register')}
+                className="font-bold text-[#0F766E] underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#14B8A6]"
+              >
+                Create an account
+              </button>
             </p>
           </div>
-
-          <p className="text-center text-xs text-[#64748B]">
-            New to Bill-ihin?{' '}
-            <button
-              type="button"
-              onClick={() => navigateTo('register')}
-              className="font-bold text-[#0E7490] hover:underline"
-            >
-              Create a household account
-            </button>
-          </p>
-        </div>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }

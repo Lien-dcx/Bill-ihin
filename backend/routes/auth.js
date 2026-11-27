@@ -9,7 +9,8 @@ const { recordActivity } = require("../utils/audit");
 const { email, httpError, text } = require("../utils/validation");
 
 const router = express.Router();
-const authLimit = rateLimit();
+const registrationLimit = rateLimit();
+const loginLimit = rateLimit({ failureStatus: 401 });
 const defaultSettings = {
   defaultCurrency: "PHP",
   cycleStartDay: 1,
@@ -56,7 +57,7 @@ function publicUser(user) {
   };
 }
 
-router.post("/register", authLimit, async (req, res) => {
+router.post("/register", registrationLimit, async (req, res) => {
   const fullName = text(req.body.fullName, "Full name", { max: 120 });
   const accountEmail = email(req.body.email);
   const password = req.body.password;
@@ -124,7 +125,7 @@ router.post("/register", authLimit, async (req, res) => {
   }
 });
 
-router.post("/login", authLimit, async (req, res) => {
+router.post("/login", loginLimit, async (req, res) => {
   const accountEmail = email(req.body.email);
   if (typeof req.body.password !== "string" || !req.body.password) {
     throw httpError(400, "Password is required.");

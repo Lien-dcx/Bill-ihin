@@ -36,12 +36,13 @@ function BillFormContent({ isOpen, onClose, editingBill = null }) {
     notes: '',
   });
   const [errors, setErrors] = useState({});
+  const categoryId = form.categoryId || categories[0]?.id || '';
 
   const validate = () => {
     const next = {};
     if (!form.title.trim()) next.title = 'Bill title is required.';
     if (!form.provider.trim()) next.provider = 'Service provider or merchant is required.';
-    if (!form.categoryId) next.categoryId = 'Select a category.';
+    if (!categoryId) next.categoryId = 'Select a category.';
     if (!form.amount || Number(form.amount) <= 0) next.amount = 'Enter a valid amount greater than ₱0.';
     if (!form.dueDate) next.dueDate = 'Select a due date.';
     setErrors(next);
@@ -51,9 +52,10 @@ function BillFormContent({ isOpen, onClose, editingBill = null }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
+    const bill = { ...form, categoryId };
     const saved = editingBill
-      ? await updateBill(editingBill.id, form)
-      : await addBill(form);
+      ? await updateBill(editingBill.id, bill)
+      : await addBill(bill);
     if (saved) onClose();
   };
 
@@ -114,16 +116,28 @@ function BillFormContent({ isOpen, onClose, editingBill = null }) {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <FormInput
-            label="Category"
-            name="bill-category"
-            type="select"
-            required
-            value={form.categoryId}
-            onChange={(e) => setForm((f) => ({ ...f, categoryId: e.target.value }))}
-            options={categories.map((c) => ({ value: c.id, label: c.name }))}
-            error={errors.categoryId}
-          />
+          {categories.length > 0 ? (
+            <FormInput
+              label="Category"
+              name="bill-category"
+              type="select"
+              required
+              value={categoryId}
+              onChange={(e) => setForm((f) => ({ ...f, categoryId: e.target.value }))}
+              options={categories.map((c) => ({ value: c.id, label: c.name }))}
+              error={errors.categoryId}
+            />
+          ) : (
+            <div className="space-y-1.5">
+              <p className="block text-xs font-semibold text-[#1E293B]">
+                Category <span className="text-red-600 ml-0.5">*</span>
+              </p>
+              <p className="text-xs text-[#64748B]">
+                No categories yet. Add one from Categories in the sidebar before creating a bill.
+              </p>
+              {errors.categoryId && <p className="text-xs text-red-600 font-medium" role="alert">{errors.categoryId}</p>}
+            </div>
+          )}
           <FormInput
             label="Total Amount (₱)"
             name="bill-amount"

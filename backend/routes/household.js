@@ -62,7 +62,7 @@ router.get("/data", async (req, res) => {
     ),
     db.execute(
       `SELECT id, title, message, type, category, target_page AS targetPage,
-              read_at IS NOT NULL AS read,
+              read_at IS NOT NULL AS \`read\`,
               DATE_FORMAT(created_at, '%Y-%m-%d %H:%i') AS createdAt
        FROM billihin_notifications WHERE household_id = ? AND user_id = ? ORDER BY created_at DESC, id DESC`,
       [householdId, req.user.id]

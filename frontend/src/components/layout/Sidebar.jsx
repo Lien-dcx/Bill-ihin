@@ -1,26 +1,23 @@
 import {
   LayoutDashboard,
   Home,
+  Tags,
   ReceiptText,
   Wallet,
   HandCoins,
   ClipboardList,
   CreditCard,
   Users,
-  Tags,
   BarChart3,
-  Bell,
-  Settings,
-  UserCircle,
-  LogOut,
   X,
 } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 import { useApp } from '../../context/useApp';
 
 export function BillihinLogo({ collapsed = false }) {
   return (
     <div className="flex items-center gap-2.5 min-w-0">
-      <div className="w-9 h-9 rounded-lg bg-[#00DCE5] text-[#1E293B] flex items-center justify-center shrink-0 font-extrabold text-base tracking-tighter">
+      <div className="w-10 h-10 rounded-xl bg-[#14B8A6] text-[#17352F] flex items-center justify-center shrink-0 font-extrabold text-base tracking-tighter">
         <svg
           viewBox="0 0 24 24"
           className="w-5 h-5"
@@ -46,20 +43,17 @@ export function BillihinLogo({ collapsed = false }) {
 }
 
 export default function Sidebar({
-  collapsed,
-  mobileOpen,
-  onCloseMobile,
+  open,
+  onClose,
 }) {
+  const closeButtonRef = useRef(null);
   const {
     currentPage,
     navigateTo,
     isAdmin,
-    notifications,
     contributions,
-    logout,
   } = useApp();
 
-  const unreadNotifications = notifications.filter((n) => !n.read).length;
   const pendingContributions = contributions.filter((c) => c.status === 'Pending').length;
 
   const dashboardId = isAdmin ? 'dashboard' : 'member-dashboard';
@@ -81,18 +75,14 @@ export default function Sidebar({
     { id: 'members', label: 'Household Members', icon: Users },
     { id: 'categories', label: 'Categories', icon: Tags },
     { id: 'reports', label: 'Reports & Analytics', icon: BarChart3 },
-    {
-      id: 'notifications',
-      label: 'Notifications',
-      icon: Bell,
-      badge: unreadNotifications > 0 ? unreadNotifications : null,
-    },
-    { id: 'settings', label: 'Settings', icon: Settings },
-    { id: 'profile', label: 'My Profile', icon: UserCircle },
   ];
   const visibleNavItems = isAdmin
     ? navItems
-    : navItems.filter((item) => !['budgets', 'payments', 'members', 'categories', 'reports', 'settings'].includes(item.id));
+    : navItems.filter((item) => !['budgets', 'payments', 'members', 'categories', 'reports'].includes(item.id));
+
+  useEffect(() => {
+    if (open) closeButtonRef.current?.focus();
+  }, [open]);
 
   const isActive = (item) => {
     if (item.match) return item.match.includes(currentPage);
@@ -101,38 +91,56 @@ export default function Sidebar({
 
   const handleNav = (id) => {
     navigateTo(id);
-    if (onCloseMobile) onCloseMobile();
+    onClose();
   };
 
-  const sidebarBody = (isMobileDrawer = false) => {
-    const isMini = collapsed && !isMobileDrawer;
-    return (
-      <div className="flex flex-col h-full bg-[#1E293B] text-slate-200 select-none">
-        {/* Logo Row */}
-        <div
-          className={`h-16 flex items-center border-b border-slate-700/70 px-4 shrink-0 ${
-            isMini ? 'justify-center' : 'justify-between'
-          }`}
-        >
-          <BillihinLogo collapsed={isMini} />
-          {isMobileDrawer && (
-            <button
-              type="button"
-              onClick={onCloseMobile}
-              aria-label="Close navigation menu"
-              className="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-700/60"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          )}
+  return (
+    <div
+      className="fixed inset-0 z-50"
+      aria-hidden={!open}
+      style={{
+        visibility: open ? 'visible' : 'hidden',
+        transition: 'visibility 300ms linear',
+        transitionDelay: open ? '0ms' : '300ms',
+      }}
+    >
+      <button
+        type="button"
+        tabIndex={-1}
+        onClick={onClose}
+        aria-label="Close navigation menu"
+        className={`absolute inset-0 h-full w-full bg-[#18251F]/55 backdrop-blur-[2px] transition-opacity duration-300 ${
+          open ? 'opacity-100' : 'opacity-0'
+        }`}
+      />
+      <aside
+        id="main-navigation"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Main navigation"
+        inert={!open}
+        className={`absolute inset-y-0 left-0 flex w-[min(21rem,88vw)] flex-col bg-[#24352F] text-slate-100 shadow-2xl transition-transform duration-300 ease-out ${
+          open ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        <div className="flex h-[76px] items-center justify-between border-b border-white/10 px-5">
+          <BillihinLogo />
+          <button
+            ref={closeButtonRef}
+            type="button"
+            onClick={onClose}
+            aria-label="Close navigation menu"
+            className="flex h-11 w-11 items-center justify-center rounded-xl text-slate-200 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#72D6C1]"
+          >
+            <X className="h-6 w-6" aria-hidden="true" />
+          </button>
         </div>
-
-        {/* Navigation Links */}
         <nav
-          aria-label="Primary Sidebar Navigation"
-          className="flex-1 overflow-y-auto px-3 py-4 space-y-1"
+          id="main-navigation-links"
+          aria-label="Primary navigation"
+          className="flex-1 space-y-1 overflow-y-auto px-3 py-5"
         >
-            {visibleNavItems.map((item) => {
+          {visibleNavItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item);
             return (
@@ -140,26 +148,21 @@ export default function Sidebar({
                 key={item.id}
                 type="button"
                 onClick={() => handleNav(item.id)}
-                title={isMini ? item.label : undefined}
                 aria-current={active ? 'page' : undefined}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
+                className={`flex min-h-[52px] w-full items-center justify-between gap-3 rounded-xl px-4 text-left text-base font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#72D6C1] ${
                   active
-                    ? 'bg-[#00DCE5] text-[#1E293B] font-semibold'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-800/90'
-                } ${isMini ? 'justify-center px-2' : 'justify-between'}`}
+                    ? 'bg-[#D8F3E9] text-[#24352F]'
+                    : 'text-slate-200 hover:bg-white/10 hover:text-white'
+                }`}
               >
-                <span className="flex items-center gap-3 min-w-0">
-                  <Icon className="w-4 h-4 shrink-0" aria-hidden="true" />
-                  {!isMini && <span className="truncate">{item.label}</span>}
+                <span className="flex min-w-0 items-center gap-3">
+                  <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
+                  <span className="truncate">{item.label}</span>
                 </span>
-                {!isMini && item.badge && (
-                  <span
-                    className={`px-1.5 py-0.5 text-[11px] font-bold rounded tabular-nums ${
-                      active
-                        ? 'bg-[#1E293B] text-[#00DCE5]'
-                        : 'bg-slate-700 text-slate-100'
-                    }`}
-                  >
+                {item.badge && (
+                  <span className={`rounded-full px-2.5 py-1 text-sm font-bold tabular-nums ${
+                    active ? 'bg-[#24352F] text-white' : 'bg-white/15 text-white'
+                  }`}>
                     {item.badge}
                   </span>
                 )}
@@ -167,52 +170,7 @@ export default function Sidebar({
             );
           })}
         </nav>
-
-        {/* Logout Footer */}
-        <div className="p-3 border-t border-slate-700/70 shrink-0">
-          <button
-            type="button"
-            onClick={() => {
-              if (onCloseMobile) onCloseMobile();
-              logout();
-            }}
-            title={isMini ? 'Logout' : undefined}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:text-red-300 hover:bg-slate-800 transition-colors whitespace-nowrap ${
-              isMini ? 'justify-center px-2' : ''
-            }`}
-          >
-            <LogOut className="w-4 h-4 shrink-0" aria-hidden="true" />
-            {!isMini && <span>Logout</span>}
-          </button>
-        </div>
-      </div>
-    );
-  };
-
-  return (
-    <>
-      {/* Desktop Sidebar */}
-      <aside
-        className={`hidden lg:flex flex-col shrink-0 border-r border-slate-800 transition-all duration-200 ${
-          collapsed ? 'w-[74px]' : 'w-[256px]'
-        }`}
-      >
-        {sidebarBody(false)}
       </aside>
-
-      {/* Mobile Drawer */}
-      {mobileOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden flex">
-          <div
-            className="fixed inset-0 bg-slate-900/60"
-            onClick={onCloseMobile}
-            aria-hidden="true"
-          />
-          <aside className="relative w-72 max-w-[82vw] h-full z-10 shadow-2xl">
-            {sidebarBody(true)}
-          </aside>
-        </div>
-      )}
-    </>
+    </div>
   );
 }

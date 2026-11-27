@@ -100,8 +100,8 @@ function BudgetFormContent({ isOpen, onClose, editingBudget = null, defaultMonth
             label="Monthly Allocation (₱)"
             name="budget-amount"
             type="number"
-            step="100"
-            min="1"
+            step="0.01"
+            min="0.01"
             required
             value={form.allocatedAmount}
             onChange={(e) => setForm((f) => ({ ...f, allocatedAmount: e.target.value }))}
