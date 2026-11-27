@@ -27,3 +27,4 @@ The database starts empty. Registering creates the first household administrator
 ## Checks
 
 From `backend`, run `npm test` for input validation tests. From `frontend`, run `node --test src/utils/finance.test.js`, `npm run build`, and `npm run lint`.
+# Bill-ihin
